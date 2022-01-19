@@ -1,0 +1,20 @@
+#container {
+    padding-top: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    background-color: orange;
+    text-align: center;
+}
+
+.label-wrapper {
+    font-size: 40px;
+    background-color: green;
+    padding: 0px 20px 0px 20px;
+}

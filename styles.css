@@ -1,23 +1,58 @@
 
-#container {
+#center-container {
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center;
+    background-color: paleturquoise;
     
 }
+#clock-container {
+    width: 620px;
+    background-color: gray;
+    height: 550px;
+}
+#app-header{
+    width: 620px;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    background-color: green;
+    padding: 0px 20px 0px 20px;
+    text-align: center;
+}
 
+.controls-wrapper,
+.timer-wrapper {
+    display: flex;
+    width: 620px;
+}
+
+.session-wrapper,
+.label-wrapper {
+    width: 620px;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background-color: green;
+    padding: 0px 20px 0px 20px;
+    text-align: center;
+}
+
+/* -------- buttons ---------*/
 .grid-wrapper {
     text-align: center;
     margin: 0 auto;
     width: 150px;
     height: 50px;
     background-color: orange;
+    
 }
 
 .incrementLeft {
     display: inline-block;
     width: 50px;
+    height: 50px;
     
 }
 
@@ -25,18 +60,13 @@
     display: inline-block;
     width: 50px;
     margin: 0px;
-    
+    background-color: yellow;
+    height: 50px;
 }
 
 .incrementRight {
     display: inline-block;
     width: 50px;
+    height: 50px;
     
-}
-
-.label-wrapper {
-    font-size: 40px;
-    background-color: green;
-    padding: 0px 20px 0px 20px;
-    text-align: center;
 }

@@ -31,9 +31,11 @@ class App extends React.Component {
     }
     
     handlePlay = () => {
+        accurateInterval(
         this.setState ({
-            timer: "1450"
-        });
+            isPlaying: true,
+            timer: this.state.timer - 1
+        }), 1000);// build accurateInterval funtion to avoid time drift
     }
     handlePause = () => {
         this.handlePlay(pause);
@@ -49,6 +51,20 @@ class App extends React.Component {
         const breakVal = this.state.breakLength
         this.setState({
             breakLength: breakVal > 0 ? String(Number(breakVal) - 1) : breakVal
+        });
+    }
+    handleSessionIncrease = () => {
+        const sessionVal = this.state.sessionLength
+        this.setState({
+            sessionLength: sessionVal < 60 ? String(Number(sessionVal) + 1) : sessionVal,
+            timer: sessionVal < 60 ? String(Number(sessionVal) + 1)  * 60 : this.state.timer
+        });
+    }
+    handleSessionDecrease = () => {
+        const sessionVal = this.state.sessionLength
+        this.setState({
+            sessionLength: sessionVal > 1 ? String(Number(sessionVal) - 1) : sessionVal,
+            timer: sessionVal > 1 ? String(Number(sessionVal) - 1) * 60 : this.state.timer
         });
     }
     //------------------------------------------
@@ -82,9 +98,9 @@ class App extends React.Component {
                         </div>
                         <div className="label-wrapper" id="session-label">Session Length
                             <div className="block-wrapper">
-                                <button id="session-increment" className="btn incrementLeft"><i className="fa fa-arrow-up fa-2x"></i></button>
+                                <button id="session-increment" className="btn incrementLeft" onClick={this.handleSessionIncrease}><i className="fa fa-arrow-up fa-2x"></i></button>
                                     <div id="session-length" className="incrementCenter">{sessionLength}</div>
-                                <button id="session-decrement" className="btn incrementRight"><i className="fa fa-arrow-down fa-2x"></i></button>
+                                <button id="session-decrement" className="btn incrementRight" onClick={this.handleSessionDecrease}><i className="fa fa-arrow-down fa-2x"></i></button>
                             </div>
                         </div>
                     </div>

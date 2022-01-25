@@ -1,17 +1,59 @@
 
 class App extends React.Component {
-    constructor(props){
-        super(props)
+    constructor(props) {
+        super(props);
+        this.startClock = undefined;//used as setInterval to access globally in eventhandlers
         this.state = {
             sessionOrBreak: 'Session',
             breakLength: '5',
             sessionLength: '25',
-            timer: '1500',
+            timer: '2',
             isPlaying: false
 
         }
     }
+  
+    clockTime = () => {
+        let minutes = Math.floor(this.state.timer / 60);//takes state's timer and divides by 60, round down to get the current minute (left side of clock)
+        let seconds = this.state.timer - (minutes * 60);//takes state's timer and subtracts current minute converted to seconds to get remainder seconds (right side of clock)
+        seconds = seconds < 10 ? '0' + seconds : seconds;//shorthand if else to add 0's to keep clock always at 4 didgits
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return minutes + ':' + seconds;
+    }
+    
+    //---------------Play/Pause/Reset-----------
     //event handlers are arrow funtions so they dont need the this.bind(this) since arrow functions dont rescope "this" keyword.
+    handlePlay = () => {
+        this.setState({isPlaying: true});
+        this.startClock = setInterval(() => {
+                const { timer, sessionOrBreak, breakLength} = this.state;
+                if(timer <= 0) {
+                    if(sessionOrBreak == 'Session'){
+                        this.setState({
+                            sessionOrBreak: 'Break',
+                            timer: 5
+                        });
+                        }else if(sessionOrBreak == 'Break'){
+                            this.setState({
+                                sessionOrBreak: 'Session',
+                                timer: '10'
+                            });  
+                        }
+                            else {
+                                return
+                             }
+                    }         
+                this.setState({
+                    timer: timer - 1
+                }); 
+            }, 1000);
+        }
+        
+    handlePause = () => {
+        this.setState({isPlaying: false});
+        clearInterval(this.startClock);
+    }
+    
     handleReset = () => { 
         this.setState({
             sessionOrBreak: 'Session',
@@ -22,24 +64,6 @@ class App extends React.Component {
         });
     }
 
-    clockTime = () => {
-        let minutes = Math.floor(this.state.timer / 60);//takes state's timer and divides by 60, round down to get the current minute (left side of clock)
-        let seconds = this.state.timer - (minutes * 60);//takes state's timer and subtracts current minute converted to seconds to get remainder seconds (right side of clock)
-        seconds = seconds < 10 ? '0' + seconds : seconds;//shorthand if else to add 0's to keep clock always at 4 didgits
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        return minutes + ':' + seconds;
-    }
-    
-    handlePlay = () => {
-        accurateInterval(
-        this.setState ({
-            isPlaying: true,
-            timer: this.state.timer - 1
-        }), 1000);// build accurateInterval funtion to avoid time drift
-    }
-    handlePause = () => {
-        this.handlePlay(pause);
-    }
     //------------Increment Handles-------------
     handleBreakIncrease = () => {
         const breakVal = this.state.breakLength
@@ -67,6 +91,7 @@ class App extends React.Component {
             timer: sessionVal > 1 ? String(Number(sessionVal) - 1) * 60 : this.state.timer
         });
     }
+
     //------------------------------------------
     render() {
         const { 
@@ -74,6 +99,7 @@ class App extends React.Component {
                 sessionLength, 
                 sessionOrBreak
             } = this.state;
+        
         return (
             <div id="center-container">
                 <div id="clock-container">

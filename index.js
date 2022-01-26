@@ -23,23 +23,35 @@ class App extends React.Component {
     
     //---------------Play/Pause/Reset-----------
     //event handlers are arrow funtions so they dont need the this.bind(this) since arrow functions dont rescope "this" keyword.
-    handlePlayPause = () => {
+    handlePlayPause = (props) => {
+        if (this.state.isPlaying === false){
+            document.getElementById("playPause").classList.remove('fa-play');//changes play/pause icon depending on isPlaying when handler activated
+            document.getElementById("playPause").classList.add('fa-pause');
+            document.getElementById("time-left").style.backgroundColor = "rgb(54, 196, 108)"; 
+        }
         if (this.state.isPlaying === true) {
             clearInterval(this.startClock)
+            document.getElementById("playPause").classList.remove('fa-pause');
+            document.getElementById("playPause").classList.add('fa-play');
+            document.getElementById("time-left").style.backgroundColor = "rgb(192, 230, 245)"; 
             this.setState({isPlaying: false});
         }else {
-        this.setState({isPlaying: true});
-        
+        this.setState({isPlaying: true});  
         this.startClock = setInterval(() => {
                 const { timer, sessionOrBreak, sessionLength, breakLength} = this.state;
                 if(timer == 0) {
                     if(sessionOrBreak == 'Session'){
+                        this.beepSound.play();
                         this.setState({
-                            sessionOrBreak: 'Break'                        });
+                            sessionOrBreak: 'Break'                        
+                            });
+                        document.getElementById("time-left").style.backgroundColor = "tomato";   
                         }else if(sessionOrBreak == 'Break'){
+                            this.beepSound.play();
                             this.setState({
                                 sessionOrBreak: 'Session',
-                            });  
+                            });
+                            document.getElementById("time-left").style.backgroundColor = "rgb(54, 196, 108)";
                         }
                             else {
                                 return
@@ -48,14 +60,17 @@ class App extends React.Component {
                 this.setState({
                     timer: timer > 0 ? timer - 1 : sessionOrBreak == 'Break' ? sessionLength * 60 : breakLength * 60
                 }); 
-                console.log(timer);
-                console.log(sessionOrBreak);
             }, 1000);
         }
     }
  
     handleReset = () => { 
         clearInterval(this.startClock)
+        document.getElementById("playPause").classList.remove('fa-pause');
+        document.getElementById("playPause").classList.add('fa-play');
+        document.getElementById("time-left").style.backgroundColor = "rgb(192, 230, 245)";
+        this.beepSound.pause();
+        this.beepSound.currentTime = 0;
         this.setState({
             sessionOrBreak: 'Session',
             breakLength: '5',
@@ -65,7 +80,7 @@ class App extends React.Component {
         });
     }
 
-    //------------Increment Handles-------------
+    //------------Increment Handlers-------------
     handleBreakIncrease = () => {
         const breakVal = this.state.breakLength
         this.setState({
@@ -100,7 +115,6 @@ class App extends React.Component {
                 sessionLength, 
                 sessionOrBreak
             } = this.state;
-        
         return (
             <div id="center-container">
                 <div id="clock-container">
@@ -109,8 +123,12 @@ class App extends React.Component {
                         <div className="session-wrapper" id="timer-label">{sessionOrBreak}
                         <div id="time-left">{this.clockTime()}</div>
                             <div className="block-wrapper">
-                                <button id="start_stop" className="btn session-controls positionLeft" onClick={this.handlePlayPause}><i className="fa fa-play fa-2x"></i></button>
-                                <button id="session-pause" className="btn session-controls positionCenter"><i className="fa fa-pause fa-2x"></i></button>
+                                <button id="start_stop" className="btn session-controls positionLeft" onClick={this.handlePlayPause}>
+                                        <i id="playPause" className="fa fa-play fa-2x"></i>
+                                        <audio id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+                                            ref={(audio) => {this.beepSound = audio}}
+                                        ></audio>
+                                </button>
                                 <button id="reset" className="btn session-controls positionRight" onClick={this.handleReset}><i className="fa fa-refresh fa-2x"></i></button>
                             </div>
                         </div>

@@ -52,7 +52,7 @@
 }
 
 /* -------- buttons ---------*/
-.btn-primary:hover,.btn-primary:focus,.btn-primary:active, /* removes bootstrap button effects */
+.btn-primary:hover,.btn-primary:focus,.btn-primary:active, /* removes bootstrap button effects cleaner look */
 .btn-primary:active:focus:not(:disabled):not(.disabled),
 .btn:focus, .btn:active, .btn:hover{
     box-shadow: none!important;

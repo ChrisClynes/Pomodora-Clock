@@ -97,7 +97,7 @@ class App extends React.Component {
         const sessionVal = this.state.sessionLength
         this.setState({
             sessionLength: sessionVal < 60 ? String(Number(sessionVal) + 1) : sessionVal,
-            timer: sessionVal < 60 ? String(Number(sessionVal) + 1)  * 60 : this.state.timer
+            timer: sessionVal < 60 ? String(Number(sessionVal) + 1)  * 60 : this.state.timer//accurately update session val to timer
         });
     }
     handleSessionDecrease = () => {

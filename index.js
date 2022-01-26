@@ -7,7 +7,7 @@ class App extends React.Component {
             sessionOrBreak: 'Session',
             breakLength: '5',
             sessionLength: '25',
-            timer: '2',
+            timer: '1500',
             isPlaying: false
 
         }
@@ -23,20 +23,22 @@ class App extends React.Component {
     
     //---------------Play/Pause/Reset-----------
     //event handlers are arrow funtions so they dont need the this.bind(this) since arrow functions dont rescope "this" keyword.
-    handlePlay = () => {
+    handlePlayPause = () => {
+        if (this.state.isPlaying === true) {
+            clearInterval(this.startClock)
+            this.setState({isPlaying: false});
+        }else {
         this.setState({isPlaying: true});
+        
         this.startClock = setInterval(() => {
-                const { timer, sessionOrBreak, breakLength} = this.state;
-                if(timer <= 0) {
+                const { timer, sessionOrBreak, sessionLength, breakLength} = this.state;
+                if(timer == 0) {
                     if(sessionOrBreak == 'Session'){
                         this.setState({
-                            sessionOrBreak: 'Break',
-                            timer: 5
-                        });
+                            sessionOrBreak: 'Break'                        });
                         }else if(sessionOrBreak == 'Break'){
                             this.setState({
                                 sessionOrBreak: 'Session',
-                                timer: '10'
                             });  
                         }
                             else {
@@ -44,17 +46,16 @@ class App extends React.Component {
                              }
                     }         
                 this.setState({
-                    timer: timer - 1
+                    timer: timer > 0 ? timer - 1 : sessionOrBreak == 'Break' ? sessionLength * 60 : breakLength * 60
                 }); 
+                console.log(timer);
+                console.log(sessionOrBreak);
             }, 1000);
         }
-        
-    handlePause = () => {
-        this.setState({isPlaying: false});
-        clearInterval(this.startClock);
     }
-    
+ 
     handleReset = () => { 
+        clearInterval(this.startClock)
         this.setState({
             sessionOrBreak: 'Session',
             breakLength: '5',
@@ -74,7 +75,7 @@ class App extends React.Component {
     handleBreakDecrease = () => {
         const breakVal = this.state.breakLength
         this.setState({
-            breakLength: breakVal > 0 ? String(Number(breakVal) - 1) : breakVal
+            breakLength: breakVal > 1 ? String(Number(breakVal) - 1) : breakVal
         });
     }
     handleSessionIncrease = () => {
@@ -108,8 +109,8 @@ class App extends React.Component {
                         <div className="session-wrapper" id="timer-label">{sessionOrBreak}
                         <div id="time-left">{this.clockTime()}</div>
                             <div className="block-wrapper">
-                                <button id="session-play" className="btn session-controls positionLeft" onClick={this.handlePlay}><i className="fa fa-play fa-2x"></i></button>
-                                <button id="session-pause" className="btn session-controls positionCenter" onClick={this.handlePause}><i className="fa fa-pause fa-2x"></i></button>
+                                <button id="start_stop" className="btn session-controls positionLeft" onClick={this.handlePlayPause}><i className="fa fa-play fa-2x"></i></button>
+                                <button id="session-pause" className="btn session-controls positionCenter"><i className="fa fa-pause fa-2x"></i></button>
                                 <button id="reset" className="btn session-controls positionRight" onClick={this.handleReset}><i className="fa fa-refresh fa-2x"></i></button>
                             </div>
                         </div>
